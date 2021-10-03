@@ -1,2 +1,2 @@
-# MATLAB-projects
-All the MATLAB implementations that I have carried out are put into this repository.
+# DSP-projects
+Projects and tasks carried out in Digital Signal Processing course work is present in this repository.
