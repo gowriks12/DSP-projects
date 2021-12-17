@@ -2,6 +2,7 @@
 Projects and tasks carried out in Digital Signal Processing course work is present in this repository.
 All the projects are carried out in MATALB.
 
-The first project is to demonstrate interpolation and decimation of signals for a given I/D ratio.
-Second project includes image compression using biorthogonal coiflets.
-Third project is a project on designing a sampling rate converter for a multi-rate DSP system.
+The description of projects is as follows:
+1. Demonstrate interpolation and decimation of an audio signal.
+2. Image compression using biorthogonal coiflets.
+3. Designing a sampling rate converter for a multi-rate DSP system.
