@@ -1,0 +1,148 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Interpolation and Decimation</title><meta name="generator" content="MATLAB 9.6"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-03-22"><meta name="DC.source" content="InterpolateDecimate.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Interpolation and Decimation</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Input the audio signal</a></li><li><a href="#2">Interpolation</a></li><li><a href="#3">Decimation</a></li><li><a href="#4">Using resample function</a></li><li><a href="#5">Plotting the signals</a></li><li><a href="#6">Conclusion</a></li></ul></div><h2 id="1">Input the audio signal</h2><p>audioread signal reads the input audio file which is an ambulance siren in the .wav format. The input audio signal is stored in variable inp_audio. Which is played using the sound function.</p><pre class="codeinput">[inp_audio,fs]=audioread(<span class="string">'sirena_ambulanza.wav'</span>);
+sound(inp_audio,fs);
+</pre><h2 id="2">Interpolation</h2><p>Interpolation of a signal is done by upsampling the signal by the factor I.</p><pre class="codeinput">I=3; <span class="comment">%Interpolating factor</span>
+audio_up=upsample(inp_audio,I); <span class="comment">%upsampling the signal</span>
+fs_u=fs*I;
+sound(audio_up,fs_u);
+</pre><h2 id="3">Decimation</h2><p>Decimation of the signal is carried out by downsampling the signal by a factor of D.</p><pre class="codeinput">D=5; <span class="comment">%Decimation factor</span>
+audio_down=downsample(audio_up,D);<span class="comment">%Downsampling the signal</span>
+fs_d=fs_u/D;
+sound(audio_down,fs_d);
+</pre><h2 id="4">Using resample function</h2><p>When sampling rate of signal has to be changed by a factor of I/D, usually, the signal is first upsampled by a factor of I, which is further passed through a low-pass filter( anti-aliasing filter) and then downsampled by a factor of D. This process can be carried out using the function resample which takes in the input audio, interpolating factor and decimating factor to provide the output audio. The result obtained is similar to the one that was obtained previously by upsampling and downsampling separately.</p><pre class="codeinput">re_audio=resample(inp_audio,I,D);
+sound(re_audio,fs_d);
+</pre><h2 id="5">Plotting the signals</h2><pre class="codeinput">figure;
+<span class="comment">%title("Sampling rate conversion");</span>
+subplot(4,1,1); plot(inp_audio);
+title(<span class="string">"Input audio"</span>);
+subplot(4,1,2); plot(audio_up);
+title(<span class="string">"Upsampled audio"</span>);
+subplot(4,1,3);plot(audio_down);
+title(<span class="string">"Downsampled audio"</span>);
+subplot(4,1,4);plot(re_audio);
+title(<span class="string">"Output audio using resample function"</span>);
+</pre><img vspace="5" hspace="5" src="InterpolateDecimate_01.png" alt=""> <h2 id="6">Conclusion</h2><p>From the above figure, it is clearly seen that the sampling frequesncy is changing according to upsampling or downsampling. It can also be observed that audio_down and re_audio have same number of samples and appear to be very similar.Only difference is that resample() function makes use of anti-aliasing filter to overcome the delay introduced by upsampling.</p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2019a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Interpolation and Decimation
+%% Input the audio signal
+% audioread signal reads the input audio file which is an ambulance siren
+% in the .wav format. The input audio signal is stored in variable
+% inp_audio. Which is played using the sound function.
+[inp_audio,fs]=audioread('sirena_ambulanza.wav');
+sound(inp_audio,fs);
+%% Interpolation
+% Interpolation of a signal is done by upsampling the signal by the factor
+% I.
+I=3; %Interpolating factor
+audio_up=upsample(inp_audio,I); %upsampling the signal
+fs_u=fs*I;
+sound(audio_up,fs_u);
+%% Decimation
+% Decimation of the signal is carried out by downsampling the signal by a
+% factor of D.
+D=5; %Decimation factor
+audio_down=downsample(audio_up,D);%Downsampling the signal
+fs_d=fs_u/D;
+sound(audio_down,fs_d);
+%% Using resample function
+% When sampling rate of signal has to be changed by a factor of I/D,
+% usually, the signal is first upsampled by a factor of I, which is further
+% passed through a low-pass filter( anti-aliasing filter) and then downsampled
+% by a factor of D. This process can be carried out using the function
+% resample which takes in the input audio, interpolating factor and
+% decimating factor to provide the output audio. The result obtained is
+% similar to the one that was obtained previously by upsampling and
+% downsampling separately.
+re_audio=resample(inp_audio,I,D);
+sound(re_audio,fs_d);
+%% Plotting the signals
+figure;
+%title("Sampling rate conversion");
+subplot(4,1,1); plot(inp_audio);
+title("Input audio");
+subplot(4,1,2); plot(audio_up);
+title("Upsampled audio");
+subplot(4,1,3);plot(audio_down);
+title("Downsampled audio");
+subplot(4,1,4);plot(re_audio);
+title("Output audio using resample function");
+%% Conclusion
+% From the above figure, it is clearly seen that the sampling frequesncy is
+% changing according to upsampling or downsampling. It can also be observed
+% that audio_down and re_audio have same number of samples and appear to be
+% very similar.Only difference is that resample() function makes use of
+% anti-aliasing filter to overcome the delay introduced by upsampling.
+
+
+
+
+
+##### SOURCE END #####
+--></body></html>
